@@ -39,7 +39,7 @@ public class PetController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Pets> updatePet(@PathVariable Long id, @RequestBody Pets pet) {
-
+        return ResponseEntity.ok(petService.updatePet(id, pet));
     }
 
     @DeleteMapping("/{id}")
