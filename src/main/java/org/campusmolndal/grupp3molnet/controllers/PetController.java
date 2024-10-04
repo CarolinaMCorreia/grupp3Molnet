@@ -3,7 +3,7 @@ package org.campusmolndal.grupp3molnet.controllers;
 
 import lombok.RequiredArgsConstructor;
 
-import org.campusmolndal.grupp3molnet.models.Pets;
+import org.campusmolndal.grupp3molnet.models.Pet;
 import org.campusmolndal.grupp3molnet.services.PetService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,22 +23,22 @@ public class PetController {
     private final PetService petService;
 
     @PostMapping("")
-    public ResponseEntity<Pets> addPet(@RequestBody Pets pet) {
+    public ResponseEntity<Pet> addPet(@RequestBody Pet pet) {
         return ResponseEntity.ok(petService.addPet(pet));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Pets> getPetById(@PathVariable Long id) {
+    public ResponseEntity<Pet> getPetById(@PathVariable Long id) {
         return ResponseEntity.ok(petService.findPetById(id));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Iterable<Pets>> getAllPets() {
+    public ResponseEntity<Iterable<Pet>> getAllPets() {
         return ResponseEntity.ok(petService.findAllPets());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Pets> updatePet(@PathVariable Long id, @RequestBody Pets pet) {
+    public ResponseEntity<Pet> updatePet(@PathVariable Long id, @RequestBody Pet pet) {
         return ResponseEntity.ok(petService.updatePet(id, pet));
     }
 

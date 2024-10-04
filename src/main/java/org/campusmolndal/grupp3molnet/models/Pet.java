@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Pets {
+public class Pet {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -46,7 +46,7 @@ public class Pets {
 
 
     // Custom all-args constructor in order to set date automatically
-    public Pets(Species species, String breed, String name, Owners owner) {
+    public Pet(Species species, String breed, String name, Owners owner) {
         this.species = species;
         this.breed = breed;
         this.name = name;
