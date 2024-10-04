@@ -24,7 +24,7 @@ public class PetController {
 
     @PostMapping("")
     public ResponseEntity<Pets> addPet(@RequestBody Pets pet) {
-        
+        return ResponseEntity.ok(petService.addPet(pet));
     }
 
     @GetMapping("/{id}")
