@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 
 @RestController
-@RequestMapping("/api/pets")
+@RequestMapping("/api/pet")
 @RequiredArgsConstructor
 public class PetController {
     private final PetService petService;
@@ -32,9 +32,9 @@ public class PetController {
         return ResponseEntity.ok(petService.findById(id));
     }
 
-    @GetMapping("")
+    @GetMapping("/all")
     public ResponseEntity<Iterable<Pets>> getAllPets() {
-
+        return ResponseEntity.ok(petService.findAll());
     }
 
     @PutMapping("/{id}")
