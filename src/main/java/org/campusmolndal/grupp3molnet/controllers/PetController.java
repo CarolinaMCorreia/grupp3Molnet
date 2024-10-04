@@ -3,7 +3,6 @@ package org.campusmolndal.grupp3molnet.controllers;
 
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
 import org.campusmolndal.grupp3molnet.models.Pets;
 import org.campusmolndal.grupp3molnet.services.PetService;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,11 +29,11 @@ public class PetController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Pets> getPetById(@PathVariable Long id) {
-
+        return ResponseEntity.ok(petService.findById(id));
     }
 
     @GetMapping("")
-    public ResponseEntity<List<Pets>> getAllPets() {
+    public ResponseEntity<Iterable<Pets>> getAllPets() {
 
     }
 
