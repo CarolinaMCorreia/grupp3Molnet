@@ -29,12 +29,12 @@ public class PetController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Pets> getPetById(@PathVariable Long id) {
-        return ResponseEntity.ok(petService.findById(id));
+        return ResponseEntity.ok(petService.findPetById(id));
     }
 
     @GetMapping("/all")
     public ResponseEntity<Iterable<Pets>> getAllPets() {
-        return ResponseEntity.ok(petService.findAll());
+        return ResponseEntity.ok(petService.findAllPets());
     }
 
     @PutMapping("/{id}")
