@@ -1,5 +1,6 @@
 package org.campusmolndal.grupp3molnet.services;
 
+import org.campusmolndal.grupp3molnet.exceptions.ResourceNotFoundException;
 import org.campusmolndal.grupp3molnet.models.Pet;
 import org.campusmolndal.grupp3molnet.models.Users;
 import org.campusmolndal.grupp3molnet.repositories.PetRepository;
@@ -28,8 +29,12 @@ public class PetService {
     }
 
     public Pet updatePet(Users user, Long id, Pet pet) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updatePet'");
+        Pet petToUpdate = findPetById(id);
+        if (!petToUpdate.getUser().getUserId() == user.getUserId() && !user.isAdmin()) { // TODO: kolla getUser() och isAdmin()
+            throw new Exception(); // TODO: byt ut exception mot passande i global exceptionhandler
+        }
+        pet.setId(id); //säkerställa att id i pet och id dem skickar in är samma så rätt pet uppdateras
+        return petRepository.save(pet);
     }
 
     public void deletePet(Users user, Long id) {
