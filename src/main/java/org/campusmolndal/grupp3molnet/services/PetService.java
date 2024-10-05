@@ -38,7 +38,10 @@ public class PetService {
     }
 
     public void deletePet(Users user, Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deletePet'");
+        Pet petToDelete = findPetById(id);
+        if (!petToDelete.getUser().getUserId() == user.getUserId() && !user.isAdmin()) { // TODO: kolla getUser() och isAdmin()
+            throw new Exception(); // TODO: byt ut exception mot passande i global exceptionhandler
+        }
+        petRepository.delete(petToDelete);
     }
 }
