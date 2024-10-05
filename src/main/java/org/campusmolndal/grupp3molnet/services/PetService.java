@@ -13,8 +13,9 @@ public class PetService {
     private final PetRepository petRepository;
 
     public Pet addPet(Users user, Pet pet) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addPet'");
+        pet.setOwner(user); // owner ska vara personen som gjorde anropet
+        pet.setId(null); // null för att förhindra att existerande pet uppdateras
+        return petRepository.save(pet);
     }
 
     public Pet findPetById(Long id) {
