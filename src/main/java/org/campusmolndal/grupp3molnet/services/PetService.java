@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class PetService {
-    PetRepository petRepository;
+    private final PetRepository petRepository;
 
     public Pet addPet(Users user, Pet pet) {
         // TODO Auto-generated method stub
