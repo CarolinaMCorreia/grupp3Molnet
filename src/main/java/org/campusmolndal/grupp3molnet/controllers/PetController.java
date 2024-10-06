@@ -4,7 +4,7 @@ package org.campusmolndal.grupp3molnet.controllers;
 import lombok.RequiredArgsConstructor;
 
 import org.campusmolndal.grupp3molnet.models.Pet;
-import org.campusmolndal.grupp3molnet.models.User;
+import org.campusmolndal.grupp3molnet.models.Users;
 import org.campusmolndal.grupp3molnet.services.PetService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +25,7 @@ public class PetController {
     private final PetService petService;
 
     @PostMapping("")
-    public ResponseEntity<Pet> addPet(@AuthenticationPrincipal User user, @RequestBody Pet pet) {
+    public ResponseEntity<Pet> addPet(@AuthenticationPrincipal Users user, @RequestBody Pet pet) {
         return ResponseEntity.ok(petService.addPet(user, pet));
     }
 
@@ -40,12 +40,12 @@ public class PetController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Pet> updatePet(@AuthenticationPrincipal User user, @PathVariable Long id, @RequestBody Pet pet) {
+    public ResponseEntity<Pet> updatePet(@AuthenticationPrincipal Users user, @PathVariable Long id, @RequestBody Pet pet) {
         return ResponseEntity.ok(petService.updatePet(user, id, pet));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePet(@AuthenticationPrincipal User user, @PathVariable Long id) {
+    public ResponseEntity<Void> deletePet(@AuthenticationPrincipal Users user, @PathVariable Long id) {
         petService.deletePet(user, id);
         return ResponseEntity.noContent().build();
     }

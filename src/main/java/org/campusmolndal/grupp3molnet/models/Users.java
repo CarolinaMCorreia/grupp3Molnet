@@ -22,7 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
-public class User implements UserDetails {
+public class Users implements UserDetails {
 
     /**
      * The unique identifier for the user.

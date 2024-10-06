@@ -2,7 +2,7 @@ package org.campusmolndal.grupp3molnet.services;
 
 import org.campusmolndal.grupp3molnet.exceptions.ResourceNotFoundException;
 import org.campusmolndal.grupp3molnet.models.Pet;
-import org.campusmolndal.grupp3molnet.models.User;
+import org.campusmolndal.grupp3molnet.models.Users;
 import org.campusmolndal.grupp3molnet.repositories.PetRepository;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +12,8 @@ import lombok.RequiredArgsConstructor;
 public class PetService {
     private final PetRepository petRepository;
 
-    public Pet addPet(User user, Pet pet) {
-        pet.setOwner(user); // owner ska vara personen som gjorde anropet
+    public Pet addPet(Users user, Pet pet) {
+        pet.setUser(user); // owner ska vara personen som gjorde anropet
         pet.setId(null); // null för att förhindra att existerande pet uppdateras
         return petRepository.save(pet);
     }
@@ -29,18 +29,18 @@ public class PetService {
         return list;
     }
 
-    public Pet updatePet(User user, Long id, Pet pet) {
+    public Pet updatePet(Users user, Long id, Pet pet) {
         Pet petToUpdate = findPetById(id);
-        if (petToUpdate.getOwner().getUserId() != user.getUserId() && !user.isAdmin()) { // TODO: kolla getOwner() och isAdmin()
+        if (petToUpdate.getUser().getUserId() != user.getUserId() && !user.isAdmin()) { // TODO: kolla getOwner() och isAdmin()
             throw new Exception(); // TODO: byt ut exception mot passande i global exceptionhandler
         }
         pet.setId(id); //säkerställa att id i pet och id dem skickar in är samma så rätt pet uppdateras
         return petRepository.save(pet);
     }
 
-    public void deletePet(User user, Long id) {
+    public void deletePet(Users user, Long id) {
         Pet petToDelete = findPetById(id);
-        if (petToDelete.getOwner().getUserId() != user.getUserId() && !user.isAdmin()) { // TODO: kolla getOwner() och isAdmin()
+        if (petToDelete.getUser().getUserId() != user.getUserId() && !user.isAdmin()) { // TODO: kolla getOwner() och isAdmin()
             throw new Exception(); // TODO: byt ut exception mot passande i global exceptionhandler
         }
         petRepository.delete(petToDelete);

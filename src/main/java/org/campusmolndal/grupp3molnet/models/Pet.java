@@ -68,7 +68,7 @@ public class Pet {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     @Schema(description = "The user the pet belongs to", example = "1")
-    private User user;
+    private Users user;
 
     /**
      * Custom setter for birthDate with validation.

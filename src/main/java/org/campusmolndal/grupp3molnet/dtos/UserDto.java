@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.campusmolndal.grupp3molnet.models.User;
+import org.campusmolndal.grupp3molnet.models.Users;
 
 @Data
 @NoArgsConstructor
@@ -19,7 +19,7 @@ public class UserDto {
     @Schema(description = "The username", example = "johnDoe")
     private String username;
 
-    public UserDto(User users) {
+    public UserDto(Users users) {
         this.id = users.getUserId();
         this.username = users.getUsername();
     }
