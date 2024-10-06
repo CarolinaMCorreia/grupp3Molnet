@@ -42,11 +42,11 @@ public class Pet {
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
-    private Owners owner;
+    private User owner;
 
 
     // Custom all-args constructor in order to set date automatically
-    public Pet(Species species, String breed, String name, Owners owner) {
+    public Pet(Species species, String breed, String name, User owner) {
         this.species = species;
         this.breed = breed;
         this.name = name;
