@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Collection;
 import java.util.List;
@@ -32,6 +33,7 @@ public class Users implements UserDetails {
     private String username;
 
     @Column(nullable = false)
+    @JsonIgnore
     @Schema(description = "The user's password", example = "safestPassword123!")
     private String password;
 
