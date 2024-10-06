@@ -116,14 +116,5 @@ public class UserService {
         return new UserDto(users.getUserId(), users.getUsername());
     }
 
-    public UserDto registerUser(RegisterUserDto registerUserDto) {
-        Users newUsers = new Users();
-        newUsers.setUsername(registerUserDto.getUsername());
-        newUsers.setPassword(passwordEncoder.encode(registerUserDto.getPassword()));
-        userRepository.save(newUsers);
 
-        UserDto userDto = new UserDto();
-        userDto.setUsername(newUsers.getUsername());
-        return userDto;
-    }
 }
