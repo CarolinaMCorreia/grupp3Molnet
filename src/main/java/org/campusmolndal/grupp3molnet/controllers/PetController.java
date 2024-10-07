@@ -1,6 +1,5 @@
 package org.campusmolndal.grupp3molnet.controllers;
 
-
 import lombok.RequiredArgsConstructor;
 
 import org.campusmolndal.grupp3molnet.dtos.PetDto;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
-
 
 @RestController
 @RequestMapping("/api/pet")
@@ -36,7 +34,7 @@ public class PetController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Iterable<Pet>> getAllPets() {
+    public ResponseEntity<Iterable<PetDto>> getAllPets() {
         return ResponseEntity.ok(petService.findAllPets());
     }
 

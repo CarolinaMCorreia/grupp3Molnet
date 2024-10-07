@@ -8,6 +8,9 @@ import org.campusmolndal.grupp3molnet.repositories.PetRepository;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PetService {
@@ -25,10 +28,14 @@ public class PetService {
         return new PetDto(petRepository.findById(id).get());
     }
 
-    public Iterable<Pet> findAllPets() {
+    public Iterable<PetDto> findAllPets() {
         Iterable<Pet> list = petRepository.findAll();
+        List<PetDto> petDtos = new ArrayList<>();
         if (!list.iterator().hasNext()) throw new ResourceNotFoundException("No pets found");
-        return list;
+        for (Pet pet : list) {
+            petDtos.add(new PetDto(pet));
+        }
+        return petDtos;
     }
 
     public PetDto updatePet(Users user, Long id, PetDto pet) {
@@ -36,7 +43,6 @@ public class PetService {
         if (petToUpdate.getUser().getUserId() != user.getUserId() && !user.isAdmin()) { // TODO: kolla getOwner() och isAdmin()
             throw new RuntimeException(); // TODO: byt ut exception mot passande i global exceptionhandler
         }
-        //pet.setId(id); //säkerställa att id i pet och id dem skickar in är samma så rätt pet uppdateras
         petToUpdate.setName(pet.getName());
         petToUpdate.setBirthDate(pet.getBirthdate());
         petToUpdate.setBreed(pet.getBreed());
