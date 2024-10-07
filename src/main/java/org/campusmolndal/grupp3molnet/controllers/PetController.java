@@ -3,6 +3,7 @@ package org.campusmolndal.grupp3molnet.controllers;
 
 import lombok.RequiredArgsConstructor;
 
+import org.campusmolndal.grupp3molnet.dtos.PetDto;
 import org.campusmolndal.grupp3molnet.models.Pet;
 import org.campusmolndal.grupp3molnet.models.Users;
 import org.campusmolndal.grupp3molnet.services.PetService;
@@ -25,12 +26,12 @@ public class PetController {
     private final PetService petService;
 
     @PostMapping("")
-    public ResponseEntity<Pet> addPet(@AuthenticationPrincipal Users user, @RequestBody Pet pet) {
+    public ResponseEntity<PetDto> addPet(@AuthenticationPrincipal Users user, @RequestBody Pet pet) {
         return ResponseEntity.ok(petService.addPet(user, pet));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Pet> getPetById(@PathVariable Long id) {
+    public ResponseEntity<PetDto> getPetById(@PathVariable Long id) {
         return ResponseEntity.ok(petService.findPetById(id));
     }
 
@@ -40,7 +41,7 @@ public class PetController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Pet> updatePet(@AuthenticationPrincipal Users user, @PathVariable Long id, @RequestBody Pet pet) {
+    public ResponseEntity<PetDto> updatePet(@AuthenticationPrincipal Users user, @PathVariable Long id, @RequestBody Pet pet) {
         return ResponseEntity.ok(petService.updatePet(user, id, pet));
     }
 
