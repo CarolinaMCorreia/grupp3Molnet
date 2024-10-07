@@ -31,13 +31,17 @@ public class PetService {
         return list;
     }
 
-    public PetDto updatePet(Users user, Long id, Pet pet) {
+    public PetDto updatePet(Users user, Long id, PetDto pet) {
         Pet petToUpdate = petRepository.findById(id).get();
         if (petToUpdate.getUser().getUserId() != user.getUserId() && !user.isAdmin()) { // TODO: kolla getOwner() och isAdmin()
             throw new RuntimeException(); // TODO: byt ut exception mot passande i global exceptionhandler
         }
-        pet.setId(id); //säkerställa att id i pet och id dem skickar in är samma så rätt pet uppdateras
-        return new PetDto(petRepository.save(pet));
+        //pet.setId(id); //säkerställa att id i pet och id dem skickar in är samma så rätt pet uppdateras
+        petToUpdate.setName(pet.getName());
+        petToUpdate.setBirthDate(pet.getBirthdate());
+        petToUpdate.setBreed(pet.getBreed());
+        petToUpdate.setSpecies(pet.getSpecies());
+        return new PetDto(petRepository.save(petToUpdate));
     }
 
     public void deletePet(Users user, Long id) {
