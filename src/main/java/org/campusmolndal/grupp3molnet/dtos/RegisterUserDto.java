@@ -17,5 +17,5 @@ public class RegisterUserDto {
     private String password;
 
     @NotNull
-    private boolean isAdmin;
+    private String isAdmin;
 }
