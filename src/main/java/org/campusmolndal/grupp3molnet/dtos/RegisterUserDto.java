@@ -1,6 +1,7 @@
 package org.campusmolndal.grupp3molnet.dtos;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -14,4 +15,7 @@ public class RegisterUserDto {
 
     @NotEmpty(message = "Password is required")
     private String password;
+
+    @NotNull
+    private boolean isAdmin;
 }
