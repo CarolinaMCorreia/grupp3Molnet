@@ -52,13 +52,13 @@ public class AuthenticationService {
         if (userRepository.findByUsername(input.getUsername()).isPresent()) {
             throw new UserAuthenticationException(input.getUsername(), "User already exists");
         }
-        //TODO: REMOVE THIS PRINT
-        System.out.println("Is Admin: " + input.isAdmin());
+
         // Skapa ny användare
+        boolean isAdmin = Boolean.parseBoolean((input.getIsAdmin()));
         Users users = Users.builder()
                 .username(input.getUsername())
                 .password(passwordEncoder.encode(input.getPassword()))
-                .admin(input.isAdmin())
+                .admin(isAdmin)
                 .build();
 
         userRepository.save(users);
