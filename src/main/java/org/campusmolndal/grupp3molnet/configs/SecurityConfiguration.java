@@ -1,8 +1,8 @@
 package org.campusmolndal.grupp3molnet.configs;
 
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.campusmolndal.grupp3molnet.services.JwtService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -17,11 +17,22 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
-@RequiredArgsConstructor
 public class SecurityConfiguration {
 
     private JwtService jwtService;
     private UserDetailsService userDetailsService;
+
+    /**
+     * Konstruktor för att injicera beroenden för JwtService och UserDetailsService.
+     *
+     * @param jwtService JWT-tjänsten
+     * @param userDetailsService användardetaljstjänsten
+     */
+    @Autowired
+    public SecurityConfiguration(JwtService jwtService, UserDetailsService userDetailsService) {
+        this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
+    }
 
     /**
      * Array som innehåller URI-sökvägar som definierar endpoints som inte kräver autentisering.
