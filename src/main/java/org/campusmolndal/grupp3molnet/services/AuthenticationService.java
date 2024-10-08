@@ -4,6 +4,7 @@ package org.campusmolndal.grupp3molnet.services;
 import org.campusmolndal.grupp3molnet.dtos.LoginUserDto;
 import org.campusmolndal.grupp3molnet.dtos.RegisterUserDto;
 import org.campusmolndal.grupp3molnet.dtos.UserDto;
+import org.campusmolndal.grupp3molnet.exceptions.UserAuthenticationException;
 import org.campusmolndal.grupp3molnet.models.Users;
 import org.campusmolndal.grupp3molnet.repositories.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -49,20 +50,20 @@ public class AuthenticationService {
      */
     public UserDto signup(RegisterUserDto input) {
         if (userRepository.findByUsername(input.getUsername()).isPresent()) {
-            throw new NoSuchElementException("User already exists");
+            throw new UserAuthenticationException(input.getUsername(), "User already exists");
         }
-
+        //TODO: REMOVE THIS PRINT
+        System.out.println("Is Admin: " + input.isAdmin());
         // Skapa ny användare
         Users users = Users.builder()
                 .username(input.getUsername())
                 .password(passwordEncoder.encode(input.getPassword()))
+                .admin(input.isAdmin())
                 .build();
 
         userRepository.save(users);
 
-        UserDto userDto = new UserDto(users);
-
-        return userDto;
+        return new UserDto(users);
     }
 
 
