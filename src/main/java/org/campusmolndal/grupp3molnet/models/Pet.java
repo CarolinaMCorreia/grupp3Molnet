@@ -18,7 +18,7 @@ import java.time.format.DateTimeParseException;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Pets {
+public class Pet {
 
     /**
      * The unique identifier of the pet.

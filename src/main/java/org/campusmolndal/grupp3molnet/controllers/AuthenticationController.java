@@ -29,7 +29,6 @@ public class AuthenticationController {
 
     private final JwtService jwtService;
     private final AuthenticationService authenticationService;
-    private final UserService userService;
 
     /**
      * Konstruktor för att injicera beroenden för JwtService och AuthenticationService.
@@ -43,7 +42,6 @@ public class AuthenticationController {
     public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService, UserService userService) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
-        this.userService = userService;
     }
 
     /**

@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 public class UserAuthenticationException extends RuntimeException {
 
-    private String username;
+    private final String username;
 
     public UserAuthenticationException(String username, String message, Throwable cause) {
         super(message, cause);

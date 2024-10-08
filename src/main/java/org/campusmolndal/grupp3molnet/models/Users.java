@@ -2,6 +2,7 @@ package org.campusmolndal.grupp3molnet.models;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Collection;
 import java.util.List;
@@ -37,6 +39,7 @@ public class Users implements UserDetails {
      */
     @Column(name = "username", nullable = false, unique = true)
     @Schema(description = "The user's username", example = "johnDoe")
+    @NotBlank
     @Size(max = 50)
     private String username;
 
@@ -44,7 +47,9 @@ public class Users implements UserDetails {
      * The password of the user. Must be at least 6 characters long.
      */
     @Column(name = "password", nullable = false)
+    @JsonIgnore
     @Schema(description = "The user's password", example = "safestPassword123!")
+    @NotBlank
     @Size(min = 6, max = 100)
     private String password;
 
@@ -53,16 +58,17 @@ public class Users implements UserDetails {
      */
     @Column(name = "admin")
     @Schema(description = "Indicates if the user has admin privileges", example = "false")
+    @JsonIgnore
     private boolean admin;
 
     /**
-     * A list of pets owned by the user. The relationship is managed by the {@link Pets} entity.
+     * A list of pets owned by the user. The relationship is managed by the {@link Pet} entity.
      * If a User is deleted, all their associated pets will also be deleted from the Pets table.
      * If a Pet is removed from a User's list of pets, it will be deleted from the database.
      */
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @Schema(description = "List of pets owned by the user")
-    private List<Pets> pets;
+    private List<Pet> pets;
 
     /**
      * Returns the authorities granted to the user.
@@ -72,6 +78,9 @@ public class Users implements UserDetails {
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        String role = admin ? "ROLE_ADMIN" : "ROLE_USER";
+        // TODO: REMOVE THIS PRINT STATEMENT
+        System.out.println("Assigned role: " + role);
         return admin ? List.of(() -> "ROLE_ADMIN") : List.of(() -> "ROLE_USER");
     }
 
