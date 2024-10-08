@@ -1,13 +1,14 @@
 package org.campusmolndal.grupp3molnet.configs;
 
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.campusmolndal.grupp3molnet.services.JwtService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
@@ -16,20 +17,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    @Autowired
     private JwtService jwtService;
-
-    @Autowired
     private UserDetailsService userDetailsService;
-
 
     /**
      * Array som innehåller URI-sökvägar som definierar endpoints som inte kräver autentisering.
      */
     private static final String[] AUTH_WHITELIST = {
-            //TODO lägga till resterande endpoints
             "/auth/signup",
             "/auth/login",
             "/swagger-resources",
@@ -61,9 +58,7 @@ public class SecurityConfiguration {
                         .anyRequest().authenticated() // Kräver autentisering för alla andra begäranden
                 )
                 // Konfigurera CSRF-skydd
-                .csrf(csrf -> csrf
-                        .disable() // Inaktivera CSRF-skydd för API:er om det är lämpligt
-                )
+                .csrf(AbstractHttpConfigurer::disable) // Inaktivera CSRF-skydd för API:er om det är lämpligt
                 // Konfigurera sessionhantering
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Använd stateless session
@@ -72,26 +67,10 @@ public class SecurityConfiguration {
                 .addFilterBefore(new JwtAuthenticationFilter(jwtService, userDetailsService), UsernamePasswordAuthenticationFilter.class)
                 // Konfigurera HTTP Basic autentisering
                 .httpBasic(httpBasic -> httpBasic
-                        .authenticationEntryPoint((request, response, authException) -> {
-                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-                        })
+                        .authenticationEntryPoint((request, response, authException) ->
+                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
+                        )
                 );
         return http.build();
     }
-
-    /**
-     * Returns a CorsConfigurationSource
-     * @return CorsConfigurationSource
-     */
-    /*
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-        configuration.setAllowedMethods(List.of("GET", "POST"));
-        configuration.setAllowedHeaders(List.of("Authorization","Content-Type"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    } */
 }
