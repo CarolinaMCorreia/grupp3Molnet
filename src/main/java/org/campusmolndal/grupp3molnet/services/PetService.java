@@ -5,6 +5,7 @@ import org.campusmolndal.grupp3molnet.exceptions.ResourceNotFoundException;
 import org.campusmolndal.grupp3molnet.models.Pet;
 import org.campusmolndal.grupp3molnet.models.Users;
 import org.campusmolndal.grupp3molnet.repositories.PetRepository;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
@@ -40,8 +41,8 @@ public class PetService {
 
     public PetDto updatePet(Users user, Long id, PetDto pet) {
         Pet petToUpdate = petRepository.findById(id).get();
-        if (petToUpdate.getUser().getUserId() != user.getUserId() && !user.isAdmin()) { // TODO: kolla getOwner() och isAdmin()
-            throw new RuntimeException(); // TODO: byt ut exception mot passande i global exceptionhandler
+        if (petToUpdate.getUser().getUserId() != user.getUserId() && !user.isAdmin()) {
+            throw new AccessDeniedException("Unauthorized Access");
         }
         petToUpdate.setName(pet.getName());
         petToUpdate.setBirthDate(pet.getBirthdate());
@@ -52,8 +53,8 @@ public class PetService {
 
     public void deletePet(Users user, Long id) {
         Pet petToDelete = petRepository.findById(id).get();
-        if (petToDelete.getUser().getUserId() != user.getUserId() && !user.isAdmin()) { // TODO: kolla getOwner() och isAdmin()
-            throw new RuntimeException(); // TODO: byt ut exception mot passande i global exceptionhandler
+        if (petToDelete.getUser().getUserId() != user.getUserId() && !user.isAdmin()) {
+            throw new AccessDeniedException("Unauthorized Access");
         }
         petRepository.delete(petToDelete);
     }
