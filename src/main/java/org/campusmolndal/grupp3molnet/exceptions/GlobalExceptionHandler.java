@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ex.getMessage());
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
