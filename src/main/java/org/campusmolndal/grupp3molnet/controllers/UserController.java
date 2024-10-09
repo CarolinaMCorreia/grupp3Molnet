@@ -7,17 +7,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.campusmolndal.grupp3molnet.dtos.UpdatePasswordDto;
 import org.campusmolndal.grupp3molnet.dtos.UpdateUserDto;
 import org.campusmolndal.grupp3molnet.dtos.UserDto;
 import org.campusmolndal.grupp3molnet.exceptions.UserNotFoundException;
 import org.campusmolndal.grupp3molnet.models.Users;
 import org.campusmolndal.grupp3molnet.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -138,31 +138,24 @@ public class UserController {
             @Parameter(description = "The id of the user to be updated")
             @PathVariable Long userId,
             @Valid @RequestBody UpdateUserDto updateUserDto) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        // TODO: REMOVE THESE PRINT STATEMENTS
-        System.out.println("Logged in user: " + auth.getName());
-        System.out.println("Logged in user roles: " + auth.getAuthorities());
-        UserDto updatedUser = userService.updateUserById(userId, updateUserDto);
-        if (updatedUser == null) {
-            return ResponseEntity.notFound().build();
+        try {
+            UserDto updatedUser = userService.updateUserById(userId, updateUserDto);
+            return ResponseEntity.ok(updatedUser);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        return ResponseEntity.ok(updatedUser);
     }
 
     @PutMapping("/password")
     @Operation(summary = "Update user password")
-    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Password updated"),
-            @ApiResponse(responseCode = "404", description = "User not found")
+            @ApiResponse(responseCode = "400", description = "Invalid password")
     })
     public ResponseEntity<UserDto> updateUserPassword(
             @AuthenticationPrincipal Users user,
-            @RequestBody String password) {
-        UserDto updatedUser = userService.updateUserPassword(user, password);
-        if (updatedUser == null) {
-            return ResponseEntity.notFound().build();
-        }
+            @Valid @RequestBody UpdatePasswordDto passwordDto) {
+        UserDto updatedUser = userService.updateUserPassword(user, passwordDto);
         return ResponseEntity.ok(updatedUser);
     }
 }
