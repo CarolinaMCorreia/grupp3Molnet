@@ -13,8 +13,6 @@ y
 Isrc/main/java/org/campusmolndal/grupp3molnet/configs/WebSocketConfig.java,e\8\e89678beebf85422b63edbaa02ee908ed0272064
 y
 Isrc/main/java/org/campusmolndal/grupp3molnet/configs/SpringDocConfig.java,2\8\28375f8383d3ed450853afe99035e8280e3beb12
-}
-Msrc/main/java/org/campusmolndal/grupp3molnet/controllers/OwnerController.java,e\6\e642e723d6b6ca9880ce0bbc293e59d221307a6c
 |
 Lsrc/main/java/org/campusmolndal/grupp3molnet/controllers/UserController.java,1\8\1835fea464724bb4cc64053c9496a544728411c2
 s
@@ -25,8 +23,6 @@ n
 >src/main/java/org/campusmolndal/grupp3molnet/dtos/UserDto.java,e\9\e98ea1e7c5bca9db4a2c18c3d92ccd5d027c4d73
 ƒ
 Ssrc/main/java/org/campusmolndal/grupp3molnet/exceptions/GlobalExceptionHandler.java,4\4\4416f8de3f6b5840e9952212cfb2d6e9c0650ed0
-…
-Usrc/main/java/org/campusmolndal/grupp3molnet/exceptions/MessageNotFoundException.java,9\9\99137ecc40c36beb0649bb6ecf5b4d1643e8beb2
 ˆ
 Xsrc/main/java/org/campusmolndal/grupp3molnet/exceptions/UserAuthenticationException.java,4\e\4e03ee0579c40559cc1e71261b78bf8c8f0d0cd2
 v
@@ -35,3 +31,19 @@ Fsrc/main/java/org/campusmolndal/grupp3molnet/models/LoginResponse.java,3\e\3e1
 pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec
 >
 .gitattributes,2\4\24139dae656713ba861751fb2c2ac38839349a7a
+{
+Ksrc/main/java/org/campusmolndal/grupp3molnet/controllers/PetController.java,d\9\d98ac26c2b83fdeca4162d4bf74293eca004164b
+8
+mvnw.cmd,1\f\1f1763f358c257ea3515417352b82b0165647ad1
+€
+Psrc/main/java/org/campusmolndal/grupp3molnet/services/AuthenticationService.java,9\c\9cfd546fc8a8c6573064dbe59c1865c31af02b92
+v
+Fsrc/main/java/org/campusmolndal/grupp3molnet/services/UserService.java,7\c\7c6ee25ea7a8e9528b25b2c9a494b3e85b4fb023
+9
+	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
+}
+Msrc/main/java/org/campusmolndal/grupp3molnet/repositories/UserRepository.java,a\1\a19998e46658fd57153ac99037831079d3d42adf
+|
+Lsrc/main/java/org/campusmolndal/grupp3molnet/repositories/PetRepository.java,5\8\58e042a766cd8812f28a638b2b8ee12ed3a61b11
+l
+<src/main/java/org/campusmolndal/grupp3molnet/models/Pet.java,7\4\74174cba49ba9411f61cb602f13b8379b52ec236
