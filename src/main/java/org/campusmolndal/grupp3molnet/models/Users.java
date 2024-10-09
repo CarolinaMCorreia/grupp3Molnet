@@ -78,9 +78,6 @@ public class Users implements UserDetails {
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        String role = admin ? "ROLE_ADMIN" : "ROLE_USER";
-        // TODO: REMOVE THIS PRINT STATEMENT
-        System.out.println("Assigned role: " + role);
         return admin ? List.of(() -> "ROLE_ADMIN") : List.of(() -> "ROLE_USER");
     }
 

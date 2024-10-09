@@ -11,13 +11,9 @@ import org.campusmolndal.grupp3molnet.models.LoginResponse;
 import org.campusmolndal.grupp3molnet.models.Users;
 import org.campusmolndal.grupp3molnet.services.AuthenticationService;
 import org.campusmolndal.grupp3molnet.services.JwtService;
-import org.campusmolndal.grupp3molnet.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Controller för att hantera autentisering-relaterade operationer såsom registrering och inloggning av användare.
@@ -35,11 +31,10 @@ public class AuthenticationController {
      *
      * @param jwtService JWT-tjänsten
      * @param authenticationService autentiseringstjänsten
-     * @param userService användartjänsten
      */
 
     @Autowired
-    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService, UserService userService) {
+    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
     }

@@ -1,13 +1,15 @@
 package org.campusmolndal.grupp3molnet.services;
 
 import jakarta.validation.Valid;
+import org.campusmolndal.grupp3molnet.dtos.UpdatePasswordDto;
 import org.campusmolndal.grupp3molnet.dtos.UpdateUserDto;
 import org.campusmolndal.grupp3molnet.dtos.UserDto;
+import org.campusmolndal.grupp3molnet.exceptions.InvalidPasswordException;
 import org.campusmolndal.grupp3molnet.exceptions.UserNotFoundException;
 import org.campusmolndal.grupp3molnet.models.Users;
 import org.campusmolndal.grupp3molnet.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,10 +20,10 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -105,30 +107,35 @@ public class UserService {
      * Metod för att uppdatera en användares lösenord.
      *
      * @param user Användaren som ska uppdateras.
-     * @param password Det nya lösenordet.
+     * @param passwordDto En UpdatePasswordDto som representerar det nya lösenordet.
      * @return Användarinformationen.
      */
-    public UserDto updateUserPassword(Users user, String password) {
-        if (password == null || password.isEmpty()) {
-            throw new IllegalArgumentException("Password cannot be empty");
-        } else {
-                user.setPassword(passwordEncoder.encode(password));
-                userRepository.save(user);
-                return new UserDto(user);
+    public UserDto updateUserPassword(Users user, UpdatePasswordDto passwordDto) {
+        if (passwordDto.getNewPassword().isEmpty() || passwordDto.getConfirmNewPassword().isEmpty()) {
+            throw new InvalidPasswordException("Password cannot be empty");
         }
+        if (!passwordDto.getNewPassword().equals(passwordDto.getConfirmNewPassword())) {
+            throw new InvalidPasswordException("Passwords do not match");
+        }
+        if (passwordEncoder.matches(passwordDto.getNewPassword(), user.getPassword())) {
+            throw new InvalidPasswordException("New password cannot be the same as the current password");
+        }
+        user.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
+        Users updatedUser = userRepository.save(user);
+        return new UserDto(updatedUser);
     }
 
     /**
      * Metod för att uppdatera en användare baserat på ID.
      *
-     * @param userId Användar-ID:t.
+     * @param userId        Användar-ID:t.
      * @param updateUserDto En UpdateUserDto som representerar ny data av den nya användaren.
      * @return Användarinformationen.
      */
     public UserDto updateUserById(Long userId, @Valid UpdateUserDto updateUserDto) {
         Users user = userRepository.findById(userId).orElse(null);
         if (user == null) {
-            throw new UserNotFoundException(String.format("User with ID: %d not found",userId));
+            throw new UserNotFoundException(String.format("User with ID: %d not found", userId));
         } else {
             updateUserDto.getUsername().ifPresent(user::setUsername);
             updateUserDto.getPassword().ifPresent(password -> user.setPassword(passwordEncoder.encode(password)));
