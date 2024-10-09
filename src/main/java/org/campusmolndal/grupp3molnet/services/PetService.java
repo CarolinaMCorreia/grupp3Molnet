@@ -41,7 +41,7 @@ public class PetService {
 
     public PetDto updatePet(Users user, Long id, PetDto pet) {
         Pet petToUpdate = petRepository.findById(id).get();
-        if (petToUpdate.getUser().getUserId() != user.getUserId() && !user.isAdmin()) { // TODO: kolla getOwner() och isAdmin()
+        if (petToUpdate.getUser().getUserId() != user.getUserId() && !user.isAdmin()) {
             throw new AccessDeniedException("Unauthorized Access");
         }
         petToUpdate.setName(pet.getName());
@@ -53,7 +53,7 @@ public class PetService {
 
     public void deletePet(Users user, Long id) {
         Pet petToDelete = petRepository.findById(id).get();
-        if (petToDelete.getUser().getUserId() != user.getUserId() && !user.isAdmin()) { // TODO: kolla getOwner() och isAdmin()
+        if (petToDelete.getUser().getUserId() != user.getUserId() && !user.isAdmin()) {
             throw new AccessDeniedException("Unauthorized Access");
         }
         petRepository.delete(petToDelete);
