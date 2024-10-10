@@ -1,3 +1,4 @@
+/*
 package org.campusmolndal.grupp3molnet.configs;
 
 import io.github.cdimascio.dotenv.Dotenv;
@@ -10,7 +11,7 @@ import javax.sql.DataSource;
 /**
  * Konfigurationsklass för att konfigurera och skapa en datakälla (DataSource) för anslutning till databasen.
  * Den använder värden från application.properties-filen för att konfigurera databasen.
- */
+ * /
 @Configuration
 public class DataSourceConfig {
 
@@ -27,3 +28,4 @@ public class DataSourceConfig {
         return dataSource;
     }
 }
+*/

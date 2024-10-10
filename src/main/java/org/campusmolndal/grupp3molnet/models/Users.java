@@ -30,7 +30,7 @@ public class Users implements UserDetails {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(name = "user_id") // Specificera att kolumnnamnet i databasen ska vara user_id
     @Schema(description = "The user's ID", example = "1")
     private Long userId;
 
