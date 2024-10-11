@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.campusmolndal.grupp3molnet.dtos.LoginUserDto;
 import org.campusmolndal.grupp3molnet.dtos.RegisterUserDto;
 import org.campusmolndal.grupp3molnet.dtos.UserDto;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
  * Controller för att hantera autentisering-relaterade operationer såsom registrering och inloggning av användare.
  */
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 @RestController
 @Tag(name = "Authentication Controller", description = "Endpoints för användarregistrering och inloggning")
 public class AuthenticationController {
@@ -33,11 +35,15 @@ public class AuthenticationController {
      * @param authenticationService autentiseringstjänsten
      */
 
+    /*
     @Autowired
     public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
     }
+
+     */
+
 
     /**
      * Hanterar registreringen av en ny användare.

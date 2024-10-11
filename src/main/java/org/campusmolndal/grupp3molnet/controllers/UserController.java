@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.campusmolndal.grupp3molnet.dtos.UpdatePasswordDto;
 import org.campusmolndal.grupp3molnet.dtos.UpdateUserDto;
 import org.campusmolndal.grupp3molnet.dtos.UserDto;
@@ -25,13 +26,14 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
 @Tag(name = "User Controller", description = "Endpoints for user management")
 public class UserController {
 
     private final UserService userService;
 
-    @Autowired
-    public UserController(UserService userService) {this.userService = userService;}
+    //@Autowired
+    //public UserController(UserService userService) {this.userService = userService;}
 
     @GetMapping("/id/{userId}")
     @Operation(summary = "Find user by id")
