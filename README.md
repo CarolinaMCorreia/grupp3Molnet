@@ -11,7 +11,6 @@
 - [Testning och Kodkvalitet](#testning-och-kodkvalitet)
 - [Miljövariabler](#miljövariabler)
 - [Teknologier](#teknologier)
-- [Kontakt](#kontakt)
 
 ## Beskrivning
 
@@ -43,7 +42,7 @@ Applikationen kommer nu att köras mot databasen på `husdjursregister.chc6mukas
 
 ### Deployment till AWS Elastic Beanstalk
 
-Den här applikationen är konfigurerad för att automatiskt deployas till AWS Elastic Beanstalk vid händelse av en push via en CI/CD-pipeline som använder GitHub Actions, AWS CodeBuild och AWS CodePipeline.
+Den här applikationen är konfigurerad för att automatiskt deployas till AWS Elastic Beanstalk vid händelse av en push via en CI/CD-pipeline som använder AWS CodeBuild och AWS CodePipeline.
 
 ## API-dokumentation
 
@@ -54,15 +53,19 @@ API:et är dokumenterat med Swagger. När applikationen körs kan du besöka Swa
 - **Lokal körning**: `http://localhost:5000/swagger-ui/index.html`
 - **AWS Elastic Beanstalk-domänen**: `http://husdjursregister1-env.eba-gzkbcjgw.eu-north-1.elasticbeanstalk.com/swagger-ui/index.html`
 
-Testa med de olika endpoints som finns i Swagger-UI genom att lägga till /swagger-ui/index.html i slutet av URL:en.
+Testa med de olika endpoints som finns i Swagger-UI eller fråga grupp 4 om deras motsvarande klient till API:et.
 
 Det finns även en swagger.json-fil i roten av projektet.
 
 ### API Endpoints:
 
+## HomeController:
+
+- GET / - Applikationens entrypoint
+
 ## AuthenticationController:
 
-- GET /auth/signup - Registrerar ny användare
+- POST /auth/signup - Registrerar ny användare
 - POST /auth/login - Logga in befintlig användare
 
 ## PetController:
@@ -78,7 +81,6 @@ Det finns även en swagger.json-fil i roten av projektet.
 - GET /api/users/all - Hämta alla användare
 - DELETE /api/users/{userId} - Radera användare
 - PUT /api/users/id/{userId} - Uppdatera användare med id
-- PUT /api/users/password - Uppdatera användares lösenord
 
 ## Databas
 
