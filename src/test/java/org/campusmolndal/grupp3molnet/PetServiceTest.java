@@ -18,6 +18,7 @@ import org.campusmolndal.grupp3molnet.repositories.PetRepository;
 import org.campusmolndal.grupp3molnet.services.PetService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.access.AccessDeniedException;
 import org.campusmolndal.grupp3molnet.models.Users;
 import org.campusmolndal.grupp3molnet.models.Pet.Species;
 
@@ -97,5 +98,87 @@ class PetServiceTest {
         String actualMsg = exception.getMessage();
 
         assertTrue(actualMsg.contains(expectedMsg));
+    }
+
+    @Test
+    void updateOwnExistingPet() {
+        when(petRepository.findById(1L)).thenReturn(Optional.of(examplePet));
+        
+        when(petRepository.save(any(Pet.class))).thenAnswer(invocation -> {
+            Pet pet = invocation.getArgument(0);
+            pet.setName("newName");
+            return pet;
+        });
+
+        Users caller = new Users(
+            1L,
+            "username",
+            "password",
+            false,
+            List.of(examplePet)
+        );
+
+        PetDto petDto = new PetDto(examplePet);
+        petDto.setName("newName");
+
+        PetDto actualDto = petService.updatePet(caller, 1L, petDto);
+
+        assertEquals(petDto.getName(), actualDto.getName());
+    }
+
+    @Test
+    void updateNonExistingPet() {
+        when(petRepository.findById(1L)).thenReturn(Optional.empty());
+        
+        Exception exception = assertThrowsExactly(ResourceNotFoundException.class, () -> {
+            petService.updatePet(
+                Users.builder().userId(1L).admin(false).build(),
+                1L,
+                new PetDto(examplePet)
+            );
+        });
+        String excpectedMsg = "No pet found";
+        String actualMsg = exception.getMessage();
+
+        assertTrue(actualMsg.contains(excpectedMsg));
+    }
+
+    @Test
+    void updateOthersExistingPetNotAdmin() {
+        when(petRepository.findById(1L)).thenReturn(Optional.of(examplePet));
+
+        Exception exception = assertThrowsExactly(AccessDeniedException.class, () -> {
+            petService.updatePet(
+                Users.builder().userId(2L).admin(false).build(),
+                1L,
+                new PetDto(examplePet)
+            );
+        });
+        String expectedMsg = "Unauthorized Access";
+        String actualMsg = exception.getMessage();
+
+        assertTrue(actualMsg.contains(expectedMsg));
+    }
+
+    @Test
+    void updateOthersExistingPetIsAdmin() {
+        when(petRepository.findById(1L)).thenReturn(Optional.of(examplePet));
+
+        when(petRepository.save(any(Pet.class))).thenAnswer(invocation -> {
+            Pet pet = invocation.getArgument(0);
+            pet.setName("newName");
+            return pet;
+        });
+
+        PetDto petDto = new PetDto(examplePet);
+        petDto.setName("newName");
+
+        PetDto actualDto = petService.updatePet(
+            Users.builder().userId(2L).admin(true).build(),
+            1L,
+            petDto
+        );
+
+        assertEquals(petDto.getName(), actualDto.getName());
     }
 }
