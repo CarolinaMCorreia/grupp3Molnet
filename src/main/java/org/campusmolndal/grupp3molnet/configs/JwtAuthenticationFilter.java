@@ -74,6 +74,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             userDetails.getAuthorities()
                     );
 
+                    // TODO: REMOVE THIS PRINT STATEMENT
+                    System.out.println("User: " + userDetails.getUsername() + " has roles: " + userDetails.getAuthorities());
+
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }
             }

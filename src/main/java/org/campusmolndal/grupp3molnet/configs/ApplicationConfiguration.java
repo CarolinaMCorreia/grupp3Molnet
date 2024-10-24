@@ -31,6 +31,7 @@ public class ApplicationConfiguration {
      *
      * @return En UserDetailsService för att hämta användardata.
      */
+    //Problemet verkar finnas här någonstans (också test för att se till att CI/CD Pipeline verkligen fungerar)
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> userRepository.findByUsername(username)

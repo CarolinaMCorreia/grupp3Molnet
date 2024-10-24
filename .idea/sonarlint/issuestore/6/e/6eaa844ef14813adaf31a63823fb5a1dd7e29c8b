@@ -1,16 +1,0 @@
-
-~
-java:S6813"BRemove this field injection and use constructor injection instead.(êæÄŞJ$f5efc578-5a7f-4d56-b66e-a0d798ac70f3
-~
-java:S6813"BRemove this field injection and use constructor injection instead.(êæÄŞJ$47884cb5-3322-4297-af73-53e602de9546
-–
-java:S3305"ZInject this field value directly into "securityFilterChain", the only method that uses it.(­İ‰ûJ$a2239b9e-8fae-47e9-9337-8ee2b7bdf84e
-›
-java:S3305"ZInject this field value directly into "securityFilterChain", the only method that uses it.(ÙÍ•¯üÿÿÿÿJ$8cb8cb4d-ebeb-4aab-ac82-c2f1eeb88dfc
-T
-java:S1135"2Complete the task associated to this TODO comment.(¼Ã±¶şÿÿÿÿ8ıÈ–£2
-
-java:S1612>"LReplace this lambda with method reference 'AbstractHttpConfigurer::disable'.(ıÒËÄøÿÿÿÿJ$d6666447-f870-43aa-8f74-aada0aede1c1
-h
-java:S1602I",Remove useless curly braces around statement(ßÖàÅJ$095f689b-1f56-4ed4-83a5-c834736b1190
-|	java:S125V"<This block of commented-out lines of code should be removed.(Û·Ò¦ûÿÿÿÿJ$39292843-4fff-4875-8c54-95eabd1feffa
