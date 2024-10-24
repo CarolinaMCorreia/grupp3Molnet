@@ -1,14 +1,17 @@
 package org.campusmolndal.grupp3molnet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import org.campusmolndal.grupp3molnet.dtos.PetDto;
+import org.campusmolndal.grupp3molnet.exceptions.ResourceNotFoundException;
 import org.campusmolndal.grupp3molnet.models.Pet;
 import org.campusmolndal.grupp3molnet.repositories.PetRepository;
 import org.campusmolndal.grupp3molnet.services.PetService;
@@ -55,5 +58,31 @@ class PetServiceTest {
 
         assertTrue(actualDto.getName().contains(pet.getName()));
         assertEquals(caller.getUserId(), actualDto.getUserId());
+    }
+
+    @Test
+    void findPetById() {
+        when(petRepository.findById(1L)).thenReturn(Optional.of(
+            new Pet(
+                1L,
+                Species.DOG,
+                "Schäfer",
+                "namn",
+                LocalDate.now(),
+                Users.builder().userId(1L).build()
+            )
+        ));
+
+        when(petRepository.findById(2L)).thenReturn(Optional.empty());
+
+        PetDto actualDto = petService.findPetById(1L);
+        Exception exception = assertThrowsExactly(ResourceNotFoundException.class, () -> {
+            petService.findPetById(2L);
+        });
+        String expectedMsg = "No pet found";
+        String actualMsg = exception.getMessage();
+
+        assertTrue(actualMsg.contains(expectedMsg));
+        assertEquals("namn", actualDto.getName());
     }
 }
