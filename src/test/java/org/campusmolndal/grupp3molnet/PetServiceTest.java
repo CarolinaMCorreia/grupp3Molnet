@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -180,5 +182,57 @@ class PetServiceTest {
         );
 
         assertEquals(petDto.getName(), actualDto.getName());
+    }
+
+    @Test
+    void deleteOwnExistingPet() {
+        when(petRepository.findById(1L)).thenReturn(Optional.of(examplePet));
+        petService.deletePet(
+            Users.builder().userId(1L).admin(false).build(),
+            1L
+        );
+
+        verify(petRepository, times(1)).delete(any(Pet.class));
+    }
+
+    @Test
+    void deleteNonExistingPet() {
+        when(petRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Exception exception = assertThrowsExactly(ResourceNotFoundException.class, () -> {
+            petService.deletePet(
+                Users.builder().userId(1L).admin(false).build(),
+                1L);
+        });
+        String expectedMsg = "No pet found";
+        String actualMsg = exception.getMessage();
+
+        assertTrue(actualMsg.contains(expectedMsg));
+    }
+
+    @Test
+    void deleteOthersExistingPetNotAdmin() {
+        when(petRepository.findById(1L)).thenReturn(Optional.of(examplePet));
+
+        Exception exception = assertThrowsExactly(AccessDeniedException.class, () -> {
+            petService.deletePet(
+                Users.builder().userId(2L).admin(false).build(),
+                1L);
+        });
+        String expectedMsg = "Unauthorized Access";
+        String actualMsg = exception.getMessage();
+
+        assertTrue(actualMsg.contains(expectedMsg));
+    }
+
+    @Test
+    void deleteOthersExistingPetIsAdmin() {
+        when(petRepository.findById(1L)).thenReturn(Optional.of(examplePet));
+        petService.deletePet(
+            Users.builder().userId(2L).admin(true).build(),
+            1L
+        );
+
+        verify(petRepository, times(1)).delete(any(Pet.class));
     }
 }
