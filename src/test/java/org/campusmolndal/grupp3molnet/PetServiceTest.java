@@ -23,11 +23,20 @@ import org.campusmolndal.grupp3molnet.models.Pet.Species;
 class PetServiceTest {
     PetRepository petRepository;
     PetService petService;
+    Pet examplePet;
 
     @BeforeEach
     void setup() {
         petRepository = mock(PetRepository.class);
         petService = new PetService(petRepository);
+        examplePet = new Pet(
+            1L,
+            Species.DOG,
+            "Schäfer",
+            "namn",
+            LocalDate.now(),
+            Users.builder().userId(1L).build()
+        );
     }
 
     @Test
@@ -39,40 +48,21 @@ class PetServiceTest {
             false,
             null
         );
-
-        Pet pet = new Pet(
-            1L,
-            Species.DOG,
-            "Schäfer",
-            "namn",
-            LocalDate.now(),
-            null
-        );
         
         when(petRepository.save(any(Pet.class))).thenAnswer(invocation -> {
             return invocation.getArgument(0);
         }
         );
 
-        PetDto actualDto = petService.addPet(caller, pet);
+        PetDto actualDto = petService.addPet(caller, examplePet);
 
-        assertTrue(actualDto.getName().contains(pet.getName()));
+        assertTrue(actualDto.getName().contains(examplePet.getName()));
         assertEquals(caller.getUserId(), actualDto.getUserId());
     }
 
     @Test
     void findPetById() {
-        when(petRepository.findById(1L)).thenReturn(Optional.of(
-            new Pet(
-                1L,
-                Species.DOG,
-                "Schäfer",
-                "namn",
-                LocalDate.now(),
-                Users.builder().userId(1L).build()
-            )
-        ));
-
+        when(petRepository.findById(1L)).thenReturn(Optional.of(examplePet));
         when(petRepository.findById(2L)).thenReturn(Optional.empty());
 
         PetDto actualDto = petService.findPetById(1L);
@@ -83,6 +73,6 @@ class PetServiceTest {
         String actualMsg = exception.getMessage();
 
         assertTrue(actualMsg.contains(expectedMsg));
-        assertEquals("namn", actualDto.getName());
+        assertEquals(examplePet.getName(), actualDto.getName());
     }
 }
