@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.campusmolndal.grupp3molnet.dtos.PetDto;
@@ -74,5 +75,27 @@ class PetServiceTest {
 
         assertTrue(actualMsg.contains(expectedMsg));
         assertEquals(examplePet.getName(), actualDto.getName());
+    }
+
+    @Test
+    void findAllPetsHappy() {
+        when(petRepository.findAll()).thenReturn(List.of(examplePet));
+        Iterable<PetDto> result = petService.findAllPets();
+
+        assertEquals(examplePet.getName(), result.iterator().next().getName());
+    }
+
+    @Test
+    void findAllPetsBad() {
+        when(petRepository.findAll()).thenReturn(List.of());
+        
+        Exception exception = assertThrowsExactly(
+            ResourceNotFoundException.class,
+            () -> petService.findAllPets()
+        );
+        String expectedMsg = "No pets found";
+        String actualMsg = exception.getMessage();
+
+        assertTrue(actualMsg.contains(expectedMsg));
     }
 }
