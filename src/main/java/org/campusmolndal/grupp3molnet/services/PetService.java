@@ -9,6 +9,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
+import java.net.ResponseCache;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class PetService {
     }
 
     public PetDto updatePet(Users user, Long id, PetDto pet) {
-        Pet petToUpdate = petRepository.findById(id).get();
+        Pet petToUpdate = petRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No pet found"));
         if (petToUpdate.getUser().getUserId() != user.getUserId() && !user.isAdmin()) {
             throw new AccessDeniedException("Unauthorized Access");
         }
@@ -52,7 +53,7 @@ public class PetService {
     }
 
     public void deletePet(Users user, Long id) {
-        Pet petToDelete = petRepository.findById(id).get();
+        Pet petToDelete = petRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No pet found"));
         if (petToDelete.getUser().getUserId() != user.getUserId() && !user.isAdmin()) {
             throw new AccessDeniedException("Unauthorized Access");
         }
