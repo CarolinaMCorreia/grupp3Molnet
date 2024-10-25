@@ -58,13 +58,11 @@ public class AuthenticationService {
         if (userRepository.findByUsername(input.getUsername()).isPresent()) {
             throw new UserAuthenticationException(input.getUsername(), "User already exists");
         }
-
         // Skapa ny användare
-        boolean isAdmin = Boolean.parseBoolean((input.getIsAdmin()));
         Users users = Users.builder()
                 .username(input.getUsername())
                 .password(passwordEncoder.encode(input.getPassword()))
-                .admin(isAdmin)
+                .admin(false)
                 .build();
 
         userRepository.save(users);

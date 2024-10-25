@@ -16,6 +16,4 @@ public class RegisterUserDto {
     @NotEmpty(message = "Password is required")
     private String password;
 
-    @NotNull
-    private String isAdmin;
 }
