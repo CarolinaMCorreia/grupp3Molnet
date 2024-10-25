@@ -4,6 +4,7 @@ package org.campusmolndal.grupp3molnet.services;
 import org.campusmolndal.grupp3molnet.dtos.LoginUserDto;
 import org.campusmolndal.grupp3molnet.dtos.RegisterUserDto;
 import org.campusmolndal.grupp3molnet.dtos.UserDto;
+import org.campusmolndal.grupp3molnet.services.JwtService;
 import org.campusmolndal.grupp3molnet.exceptions.UserAuthenticationException;
 import org.campusmolndal.grupp3molnet.models.Users;
 import org.campusmolndal.grupp3molnet.repositories.UserRepository;
@@ -12,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -23,8 +25,9 @@ import java.util.Optional;
 @Service
 public class AuthenticationService {
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     /**
      * Creates an instance of AuthenticationService with necessary dependencies.
@@ -37,11 +40,13 @@ public class AuthenticationService {
     public AuthenticationService(
             UserRepository userRepository,
             AuthenticationManager authenticationManager,
-            BCryptPasswordEncoder passwordEncoder
+            BCryptPasswordEncoder passwordEncoder,
+            JwtService jwtService
     ) {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     /**
@@ -73,7 +78,7 @@ public class AuthenticationService {
      * @param input LoginUserDto
      * @return User
      */
-    public Users authenticate(LoginUserDto input) {
+    public String authenticate(LoginUserDto input) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -84,9 +89,12 @@ public class AuthenticationService {
             if (!userToAuthenticate.isPresent()) {
                 throw new NoSuchElementException("User not found");
             }
-            return userToAuthenticate.get();
+            if (passwordEncoder.matches(input.getPassword(), userToAuthenticate.get().getPassword())) {
+                return jwtService.generateToken(userToAuthenticate.get());
+            }
         } catch (AuthenticationException e) {
             throw new UserAuthenticationException("Invalid credentials");
         }
+        return null;
     }
 }
