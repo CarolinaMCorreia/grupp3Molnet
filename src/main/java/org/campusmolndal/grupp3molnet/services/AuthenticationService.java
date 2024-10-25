@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -24,7 +25,7 @@ import java.util.Optional;
 @Service
 public class AuthenticationService {
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
@@ -88,7 +89,7 @@ public class AuthenticationService {
             if (!userToAuthenticate.isPresent()) {
                 throw new NoSuchElementException("User not found");
             }
-            if (passwordEncoder.matches(userToAuthenticate.get().getPassword(), input.getPassword())) {
+            if (passwordEncoder.matches(input.getPassword(), userToAuthenticate.get().getPassword())) {
                 return jwtService.generateToken(userToAuthenticate.get());
             }
         } catch (AuthenticationException e) {
