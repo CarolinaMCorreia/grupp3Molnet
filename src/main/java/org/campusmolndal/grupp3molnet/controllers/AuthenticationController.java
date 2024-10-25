@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.campusmolndal.grupp3molnet.dtos.LoginUserDto;
 import org.campusmolndal.grupp3molnet.dtos.RegisterUserDto;
 import org.campusmolndal.grupp3molnet.dtos.UserDto;
+import org.campusmolndal.grupp3molnet.models.LoginResponse;
 import org.campusmolndal.grupp3molnet.services.AuthenticationService;
 import org.campusmolndal.grupp3molnet.services.JwtService;
 import org.springframework.http.ResponseEntity;
@@ -63,8 +64,9 @@ public class AuthenticationController {
     @PostMapping("/login")
     @Operation(summary = "User Login", description = "Allows an existing user to log in to the API")
     @ApiResponse(responseCode = "200", description = "User successfully logged in")
-    public ResponseEntity<String> authenticate(@RequestBody LoginUserDto loginUserDto) {
+    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDto loginUserDto) {
         String userJwtToken = authenticationService.authenticate(loginUserDto);
-        return ResponseEntity.ok(userJwtToken);
+        LoginResponse loginResponse = new LoginResponse(userJwtToken, jwtService.getExpirationTime());
+        return ResponseEntity.ok(loginResponse);
     }
 }

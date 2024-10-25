@@ -4,7 +4,6 @@ package org.campusmolndal.grupp3molnet.services;
 import org.campusmolndal.grupp3molnet.dtos.LoginUserDto;
 import org.campusmolndal.grupp3molnet.dtos.RegisterUserDto;
 import org.campusmolndal.grupp3molnet.dtos.UserDto;
-import org.campusmolndal.grupp3molnet.services.JwtService;
 import org.campusmolndal.grupp3molnet.exceptions.UserAuthenticationException;
 import org.campusmolndal.grupp3molnet.models.Users;
 import org.campusmolndal.grupp3molnet.repositories.UserRepository;
