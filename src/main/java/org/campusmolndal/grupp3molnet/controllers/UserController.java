@@ -18,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -73,7 +75,7 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Users found and returned"),
             @ApiResponse(responseCode = "204", description = "No users found")
     })
-    public ResponseEntity<Set<UserDto>> findUsersByUsernames (
+    public ResponseEntity<Set<UserDto>> findUsersByUsernames(
             @Parameter(description = "The username of the user to be returned")
             @RequestParam List<String> usernames) {
         Set<UserDto> userDtos = userService.findUsersByUsernames(usernames);
@@ -107,7 +109,7 @@ public class UserController {
     })
     public ResponseEntity<Iterable<UserDto>> findAllUsers() {
         Iterable<UserDto> users = userService.findAllUsers();
-        if(!users.iterator().hasNext()) {
+        if (!users.iterator().hasNext()) {
             throw new UserNotFoundException("No users were found");
         }
         return ResponseEntity.ok(users);
