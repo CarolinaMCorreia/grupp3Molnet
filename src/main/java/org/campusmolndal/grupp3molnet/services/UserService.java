@@ -9,8 +9,11 @@ import org.campusmolndal.grupp3molnet.exceptions.UserNotFoundException;
 import org.campusmolndal.grupp3molnet.models.Users;
 import org.campusmolndal.grupp3molnet.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -106,7 +109,7 @@ public class UserService {
     /**
      * Metod för att uppdatera en användares lösenord.
      *
-     * @param user Användaren som ska uppdateras.
+     * @param user        Användaren som ska uppdateras.
      * @param passwordDto En UpdatePasswordDto som representerar det nya lösenordet.
      * @return Användarinformationen.
      */
@@ -144,4 +147,5 @@ public class UserService {
             return new UserDto(updatedUser);
         }
     }
+
 }
