@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import org.campusmolndal.grupp3molnet.models.Pet;
 import org.campusmolndal.grupp3molnet.models.Pet.Species;
 
-import java.time.LocalDate;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,13 +16,11 @@ public class PetDto {
     private String breed;
     private String name;
     private String birthdate;
-    private Long userId;
 
     public PetDto(Pet pet) {
         this.species = pet.getSpecies();
         this.breed = pet.getBreed();
         this.name = pet.getName();
         this.birthdate = pet.getBirthDate().toString();
-        this.userId = pet.getUser().getUserId();
     }
 }
