@@ -58,10 +58,10 @@ class PetServiceTest {
         }
         );
 
-        PetDto actualDto = petService.addPet(caller, examplePet);
+        PetDto petDto = petService.addPet(caller, examplePet);
 
-        assertTrue(actualDto.getName().contains(examplePet.getName()));
-        assertEquals(caller.getUserId(), actualDto.getUserId());
+        assertTrue(petDto.getName().contains(examplePet.getName()));
+        assertEquals(caller.getUserId(), petDto.getUserId());
     }
 
     @Test

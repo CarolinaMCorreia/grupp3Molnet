@@ -68,7 +68,7 @@ public class UserController {
         }
         return ResponseEntity.ok(users);
     }
-
+/*
     @GetMapping("/usernames")
     @Operation(summary = "Find users by multiple usernames")
     @ApiResponses(value = {
@@ -84,6 +84,8 @@ public class UserController {
         }
         return ResponseEntity.ok(userDtos);
     }
+
+ */
 
     @GetMapping("/usernames/{username}")
     @Operation(summary = "Find user by username")

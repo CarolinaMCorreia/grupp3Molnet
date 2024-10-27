@@ -79,19 +79,6 @@ public class UserService {
     }
 
     /**
-     * Hämta användare baserat på en lista med användarnamn.
-     *
-     * @param usernames En lista med användarnamn.
-     * @return En lista med UserDto-objekt.
-     */
-    public Set<UserDto> findUsersByUsernames(List<String> usernames) {
-        List<Users> users = userRepository.findByUsernameIn(usernames);
-        return users.stream()
-                .map(UserDto::new)
-                .collect(Collectors.toSet());
-    }
-
-    /**
      * Metod för att ta bort en användare utifrån användar-ID:t.
      *
      * @param userId Användar-ID:t.
