@@ -1,5 +1,9 @@
 # Pet Registry
 
+## NOTICE
+
+DUE TO TERMINATION OF AWS ACCOUNT THE APPLICATION CAN NOW ONLY BE RUN LOCALLY
+
 ## Table of Contents
 
 - [Description](#description)
