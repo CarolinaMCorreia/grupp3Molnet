@@ -1,4 +1,7 @@
 package org.campusmolndal.grupp3molnet.repositories;
 
-public interface PetRepository {
+import org.campusmolndal.grupp3molnet.models.Pet;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface PetRepository extends JpaRepository<Pet, Long>{
 }

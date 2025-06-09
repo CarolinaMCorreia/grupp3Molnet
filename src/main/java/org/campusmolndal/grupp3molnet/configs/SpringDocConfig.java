@@ -25,7 +25,8 @@ public class SpringDocConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("Husdjursregister")
-                        .description("API för hantering av husdjursregister med JWT-autentisering")
+                        .description("API för hantering av husdjursregister med JWT-autentisering. Root URL:  " +
+                                "http://husdjursregister1-env.eba-gzkbcjgw.eu-north-1.elasticbeanstalk.com/auth/login")
                         .version("v1.0"))
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
                 .components(new Components()

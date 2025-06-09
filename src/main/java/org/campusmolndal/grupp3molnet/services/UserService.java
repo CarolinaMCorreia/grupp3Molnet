@@ -1,54 +1,64 @@
 package org.campusmolndal.grupp3molnet.services;
 
-
-import org.campusmolndal.grupp3molnet.dtos.RegisterUserDto;
+import jakarta.validation.Valid;
+import org.campusmolndal.grupp3molnet.dtos.UpdatePasswordDto;
+import org.campusmolndal.grupp3molnet.dtos.UpdateUserDto;
 import org.campusmolndal.grupp3molnet.dtos.UserDto;
+import org.campusmolndal.grupp3molnet.exceptions.InvalidPasswordException;
+import org.campusmolndal.grupp3molnet.exceptions.UserNotFoundException;
 import org.campusmolndal.grupp3molnet.models.Users;
 import org.campusmolndal.grupp3molnet.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Iterable<UserDto> findAllUsers() {
-        return StreamSupport.stream(userRepository.findAll().spliterator(), false)
-                .map(user -> new UserDto(user))
-                .collect(Collectors.toList());
+    /**
+     * Hämtar alla användare för tjänsten.
+     *
+     * @return En lista med alla registrerade användare.
+     */
+    public Set<UserDto> findAllUsers() {
+        return userRepository.findAll().stream()
+                .map(UserDto::new)
+                .collect(Collectors.toSet());
     }
 
     /**
-     * Method to find a user by id.
+     * Hämtar användare baserat på ID.
      *
-     * @param id The id of the user.
-     * @return The user with the given id.
+     * @param id Användar-ID:t.
+     * @return Användaren med det angivna ID:t.
      */
     public UserDto findUserById(Long id) {
         Users users = userRepository.findById(id).orElse(null);
         return users != null ? new UserDto(users) : null;
     }
 
+    /**
+     * Hämta användare baserat på användarnamn.
+     *
+     * @param username Användarnamnet.
+     * @return Användaren med det angivna användarnamnet.
+     */
     public UserDto findUserByUsername(String username) {
         Users users = userRepository.findByUsername(username).orElse(null);
         return users != null ? new UserDto(users) : null;
@@ -68,62 +78,61 @@ public class UserService {
                 .collect(Collectors.toSet());
     }
 
-    public Long getCurrentUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        // Kontrollera om autentisering är tillgänglig och korrekt
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String username = userDetails.getUsername();
-
-            // Hämta användaren från databasen
-            Optional<Users> userOptional = userRepository.findByUsername(username);
-
-            // Kontrollera om användaren finns och returnera användar-ID
-            return userOptional.map(Users::getUserId)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+    /**
+     * Metod för att ta bort en användare utifrån användar-ID:t.
+     *
+     * @param userId Användar-ID:t.
+     * @return sant om användaren har tagits bort, annars falskt.
+     */
+    public boolean deleteUserById(Long userId) {
+        if (userId == null) {
+            throw new IllegalArgumentException("User IDs cannot be empty");
+        } else {
+            userRepository.deleteById(userId);
+            return true;
         }
-
-        throw new AuthenticationCredentialsNotFoundException("Authentication credentials not found");
     }
-
-    // Lägg till metoder för att hämta användare baserat på användarnamn
-    public Set<UserDto> findUsersByUsernames(List<String> usernames) {
-        List<Users> users = userRepository.findByUsernameIn(usernames);
-        return users.stream()
-                .map(UserDto::new)
-                .collect(Collectors.toSet());
-    }
-
 
     /**
-     * Hämta användar-ID:n baserat på en lista med användarnamn.
+     * Metod för att uppdatera en användares lösenord.
      *
-     * @param usernames En lista med användarnamn.
-     * @return En lista med användar-ID:n.
+     * @param user        Användaren som ska uppdateras.
+     * @param passwordDto En UpdatePasswordDto som representerar det nya lösenordet.
+     * @return Användarinformationen.
      */
-    public Set<Long> findUserIdsByUsernames(List<String> usernames) {
-        // Hämta användare baserat på användarnamn
-        List<Users> users = userRepository.findByUsernameIn(usernames);
-
-        // Konvertera listan med användare till en lista med ID:n
-        return users.stream()
-                .map(Users::getUserId)
-                .collect(Collectors.toSet());
+    public UserDto updateUserPassword(Users user, UpdatePasswordDto passwordDto) {
+        if (passwordDto.getNewPassword().isEmpty() || passwordDto.getConfirmNewPassword().isEmpty()) {
+            throw new InvalidPasswordException("Password cannot be empty");
+        }
+        if (!passwordDto.getNewPassword().equals(passwordDto.getConfirmNewPassword())) {
+            throw new InvalidPasswordException("Passwords do not match");
+        }
+        if (passwordEncoder.matches(passwordDto.getNewPassword(), user.getPassword())) {
+            throw new InvalidPasswordException("New password cannot be the same as the current password");
+        }
+        user.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
+        Users updatedUser = userRepository.save(user);
+        return new UserDto(updatedUser);
     }
 
-    private UserDto convertToUserDto(Users users) {
-        return new UserDto(users.getUserId(), users.getUsername());
+    /**
+     * Metod för att uppdatera en användare baserat på ID.
+     *
+     * @param userId        Användar-ID:t.
+     * @param updateUserDto En UpdateUserDto som representerar ny data av den nya användaren.
+     * @return Användarinformationen.
+     */
+    public UserDto updateUserById(Long userId, @Valid UpdateUserDto updateUserDto) {
+        Users user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            throw new UserNotFoundException(String.format("User with ID: %d not found", userId));
+        } else {
+            updateUserDto.getUsername().ifPresent(user::setUsername);
+            updateUserDto.getPassword().ifPresent(password -> user.setPassword(passwordEncoder.encode(password)));
+            user.setAdmin(updateUserDto.isAdmin());
+            Users updatedUser = userRepository.save(user);
+            return new UserDto(updatedUser);
+        }
     }
 
-    public UserDto registerUser(RegisterUserDto registerUserDto) {
-        Users newUsers = new Users();
-        newUsers.setUsername(registerUserDto.getUsername());
-        newUsers.setPassword(passwordEncoder.encode(registerUserDto.getPassword()));
-        userRepository.save(newUsers);
-
-        UserDto userDto = new UserDto();
-        userDto.setUsername(newUsers.getUsername());
-        return userDto;
-    }
 }
